@@ -9,14 +9,14 @@ HackerText.js is a compact JavaScript library used to create a "decoded" text ef
 Use directly by embedding the file:
 
 ```html
-<script src="hacker-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tmbckrms/libraries/libraries/hacker-text.min.js"></script>
 ```
 
 ## Quick Start
 ```html
 <div id="app"></div>
 
-<script src="hacker-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tmbckrms/libraries/libraries/hacker-text.min.js"></script>
 <script>
 HackerText.init({
     element: "#app",
@@ -69,7 +69,7 @@ HackerText.js supports automatic initialization via HTML using **custom data att
 
 ```html
 <div data-hacker data-messages="HELLO|SYSTEM ONLINE|WELCOME"></div>
-<script src="hacker-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/tmbckrms/libraries/libraries/hacker-text.min.js"></script>
 ```
 
 ### Attributes
