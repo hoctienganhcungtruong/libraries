@@ -76,7 +76,7 @@ HackerText.js supports automatic initialization via HTML using **custom data att
 | Attribute     | Type    | Description                                |   |
 | ------------- | ------- | ------------------------------------------ | - |
 | data-hacker   | boolean | Enable auto initialization              |   |
-| data-messages | string  | List of contents, separated by the characters &#124; |
+| data-messages | string  | List of contents, separated by the characters `&#124;` |
 
 ## Final Words
 Happy coding!
