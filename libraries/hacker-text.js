@@ -5,7 +5,9 @@
         deleteSpeed: 20,
         delay: 1000,
         chars: "$#@%&*!?+=-_/<>[]{}",
-        loop: true
+        loop: true,
+        liveChars: true,
+        keepAfterFinish: true
     };
 
     function randomChar(chars) {
@@ -14,12 +16,9 @@
 
     function parseMessages(raw) {
         if (!raw) return ["HACKING..."];
-
         try {
-            // try JSON
             return JSON.parse(raw);
         } catch {
-            // fallback the |
             return raw.split("|");
         }
     }
@@ -59,6 +58,16 @@
             if (i < this.reveal) {
                 output += target[i];
             } else {
+                if (this.settings.liveChars) {
+                    // display special characters alongside text
+                    output += randomChar(this.settings.chars);
+                }
+            }
+        }
+
+        // if liveChars = false
+        if (!this.settings.liveChars && this.reveal < target.length) {
+            for (let i = this.reveal; i < target.length; i++) {
                 output += randomChar(this.settings.chars);
             }
         }
@@ -75,7 +84,10 @@
             this.reveal++;
             setTimeout(() => this.type(), this.settings.speed);
         } else {
-            setTimeout(() => this.delete(), this.settings.delay);
+            if (this.index < this.messages.length - 1 || this.settings.loop || !this.settings.keepAfterFinish) {
+                setTimeout(() => this.delete(), this.settings.delay);
+            }
+            // else keep text
         }
     };
 
@@ -91,6 +103,9 @@
             if (this.index >= this.messages.length) {
                 if (this.settings.loop) {
                     this.index = 0;
+                } else if (this.settings.keepAfterFinish) {
+                    // keep the final message
+                    return;
                 } else {
                     return;
                 }
@@ -126,7 +141,53 @@
                 deleteSpeed: parseNumber(el.dataset.deleteSpeed),
                 delay: parseNumber(el.dataset.delay),
                 chars: el.dataset.chars,
-                loop: parseBoolean(el.dataset.loop)
+                loop: parseBoolean(el.dataset.loop),
+                liveChars: parseBoolean(el.dataset.liveChars),
+                keepAfterFinish: parseBoolean(el.dataset.keepAfterFinish)
+            };
+
+            // Remove undefined
+            Object.keys(options).forEach(key => {
+                if (options[key] === undefined) {
+                    delete options[key];
+                }
+            });
+
+            new HackerText(options);
+        });
+
+    });
+
+})();    };
+
+    HackerText.prototype.run = function () {
+        this.type();
+    };
+
+    // Public API
+    window.HackerText = {
+        init: function (options) {
+            return new HackerText(options);
+        }
+    };
+
+    // Auto init via data-attributes
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const elements = document.querySelectorAll("[data-hacker]");
+
+        elements.forEach(el => {
+
+            const options = {
+                element: el,
+                messages: parseMessages(el.dataset.messages),
+                speed: parseNumber(el.dataset.speed),
+                deleteSpeed: parseNumber(el.dataset.deleteSpeed),
+                delay: parseNumber(el.dataset.delay),
+                chars: el.dataset.chars,
+                loop: parseBoolean(el.dataset.loop),
+                liveChars: parseBoolean(el.dataset.liveChars),
+                keepAfterFinish: parseBoolean(el.dataset.keepAfterFinish)
             };
 
             // Remove undefined
