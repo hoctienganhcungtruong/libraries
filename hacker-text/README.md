@@ -96,7 +96,7 @@ These configurations can be passed as options to `HackerText.init()` or declared
 | Option (JS) | Attribute (HTML) | Type | Default Value | Description |
 | --- | --- | --- | --- | --- |
 | `element` | *N/A* | `String` | `HTMLElement` | *Required (JS)* | Target element context or CSS selector. |
-| `messages` | `data-messages` | `Array` | `String` | `[InnerText | "HACKING..."]` | Text configurations. Defaults to the element's inner text, or `"HACKING..."` if empty. Split via `|` or pass a serialized JSON string array. |
+| `messages` | `data-messages` | `Array` | `String` | `[InnerText &vert; "HACKING..."]` &vert; Text configurations. Defaults to the element's inner text, or `"HACKING..."` if empty. Split via `&vert;` or pass a serialized JSON string array. |
 | `speed` | `data-speed` | `Number` | `40` | Typing/reveal speed per character in milliseconds. |
 | `deleteSpeed` | `data-delete-speed` | `Number` | `20` | Character retraction speed in milliseconds. |
 | `delay` | `data-delay` | `Number` | `1000` | Break duration (in ms) before running text deletion phases. |
