@@ -65,6 +65,7 @@ If you render elements dynamically or prefer configuring your scripts within Jav
     HackerText.init({
       element: "#terminal-heading", // CSS Selector string or direct DOM node
       messages: ["MALWARE DETECTED", "QUARANTINING..."],
+      trigger: "scroll",
       speed: 60,
       deleteSpeed: 30,
       delay: 2000,
