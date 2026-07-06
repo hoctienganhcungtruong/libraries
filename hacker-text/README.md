@@ -103,15 +103,7 @@ These configurations can be passed as options to `HackerText.init()` or declared
 | `liveChars` | `data-live-chars` | `Boolean` | `true` | Continuously cycles/changes the unrevealed scramble characters on every frame. |
 | `keepAfterFinish` | `data-keep-after-finish` | `Boolean` | `true` | If `loop` is `false`, setting this to `true` persists the final message permanently on screen. |
 | `scrambleCount` | `data-scramble-count` | `Number` | `3` | The minimum number of frames a character cycles through random scrambling before being fully revealed. |
-| `trigger` | `data-trigger` | `String` | `"load"` | Execution strategy. <br>
-
-<br>• `"load"`: Fires instantly.<br>
-
-<br>• `"scroll"`: Fires via `IntersectionObserver` when 10% of the element is visible.<br>
-
-<br>• `"click"`: Changes cursor to pointer and restarts the sequence from index `0` on element click.<br>
-
-<br>• `"manual"`: Prevents auto-execution, requiring you to call `.start()` programmatically. |
+| `trigger` | `data-trigger` | `String` | `"load"` | Execution strategy.<br>• `"load"`: Fires instantly.<br>• `"scroll"`: Fires via `IntersectionObserver` when 10% of the element is visible.<br>• `"click"`: Changes cursor to pointer and restarts the sequence from index `0` on element click.<br>• `"manual"`: Prevents auto-execution, requiring you to call `.start()` programmatically. |
 
 ---
 
