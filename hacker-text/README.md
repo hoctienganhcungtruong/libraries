@@ -19,7 +19,7 @@ A lightweight, dependency-free JavaScript utility that applies a dynamic, termin
 Include the script at the bottom of your HTML document, right before the closing `</body>` tag:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/libraries@main/hacker-text/hacker-text-v1.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/libraries@main/hacker-text/hacker-text-v2.min.js"></script>
 ```
 
 ---
@@ -92,6 +92,7 @@ These configurations can be passed as options to `HackerText.init()` or declared
 | `data-loop` | `Boolean` | `true` | Continually restarts the text sequence from index `0` after the final message is processed. |
 | `data-live-chars` | `Boolean` | `true` | Continuously changes the unrevealed scramble characters on every single frame. |
 | `data-keep-after-finish` | `Boolean` | `true` | If `loop` is `false`, setting this to `true` persists the final message permanently on screen. |
+| `data-trigger` | `String` | `"load"` | Execution strategy. `"load"` fires immediately; `"scroll"` uses an `IntersectionObserver` to fire only when at least 10% of the element is visible in the viewport.
 
 ---
 
