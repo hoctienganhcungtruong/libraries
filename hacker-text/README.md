@@ -20,7 +20,7 @@ A lightweight, dependency-free JavaScript utility that applies a dynamic, termin
 Include the script at the bottom of your HTML document, right before the closing `</body>` tag:
 
 ```html
-<script src="[https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/libraries@main/hacker-text/hacker-text-v2.min.js](https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/libraries@main/hacker-text/hacker-text-v2.min.js)"></script>
+<script src="https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/libraries@main/hacker-text/hacker-text-v3.min.js"></script>
 
 ```
 
