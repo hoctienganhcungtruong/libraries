@@ -1,10 +1,3 @@
-Here is the updated **README.md** tailored to match your latest codebase changes.
-
-This version highlights the new **`hover` trigger**, the inner text **auto-fallback mechanism**, and the newly introduced **lifecycle callbacks (`onMessage` and `onComplete`)**.
-
----
-
-```markdown
 # HackerText.js
 
 A lightweight, dependency-free JavaScript utility that applies a dynamic, terminal-style "hacker" typing and text-scrambling effect to HTML elements. The library supports sequential messaging, custom scrambling character sets, looping, user interaction hooks, lifecycle callbacks, and zero-configuration initialization using HTML `data-` attributes.
