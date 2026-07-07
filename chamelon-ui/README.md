@@ -21,7 +21,7 @@ Every component encapsulates its logic, structure, and styling inside a decouple
 Simply reference the script directly within your HTML file or bundle it via your build workflow:
 
 ```html
-<script src="path/to/ChameleonUI.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/hoctienganhcungtruong/libraries@main/chamelon-ui/chamelon-ui-v1.min.js" defer></script>
 
 ```
 
