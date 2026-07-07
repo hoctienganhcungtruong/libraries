@@ -103,7 +103,7 @@ These configurations can be passed as options to `HackerText.init()` or declared
 | `chars` | `data-chars` | `String` | `"$#@%&*!?+=-_/<>[]{}"` | Complete character dictionary used to draw frame scramble steps. |
 | `loop` | `data-loop` | `Boolean` | `true` | Continually loops text iterations from index `0`. |
 | `liveChars` | `data-live-chars` | `Boolean` | `true` | Refreshes and animates unrevealed characters on every screen frame update. |
-| `keepAfterFinish` | `data-keep-after-finish` | `Boolean` | `true` | Holds onto the terminal message permanently when `loop: false`. |
+| `keepAfterFinish` | `data-keep-after-finish` | `Boolean` | `true` | Determines whether the final message stays visible on the screen or gets deleted after the entire animation cycle finishes (with `data-loop="false")`. |
 | `scrambleCount` | `data-scramble-count` | `Number` | `3` | Minimum animation step count per single character before text resolution. |
 | `trigger` | `data-trigger` | `String` | `"load"` | Strategy trigger:<br>• `"load"`: Fires instantly.<br>• `"scroll"`: Triggers on 10% target screen visibility via `IntersectionObserver`.<br>• `"click"`: Resets index tracking to `0` and fires when clicked.<br>• `"hover"`: Resets index tracking to `0` and fires on element pointer `mouseenter`. |
 | `onMessage` | *N/A* | `Function` | `null` | Callback executed when *a message* finishes typing. Parameters: `(completedText, index)`. |
