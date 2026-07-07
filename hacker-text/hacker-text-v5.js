@@ -1,0 +1,229 @@
+(function() {
+    const DEFAULTS = {
+        speed: 40,
+        deleteSpeed: 20,
+        delay: 1000,
+        chars: "$#@%&*!?+=-_/<>[]{}",
+        loop: true,
+        liveChars: true,
+        keepAfterFinish: true,
+        trigger: "load",
+        scrambleCount: 3,
+        interrupt: false,
+        onMessage: null,
+        onComplete: null
+    };
+
+    const utils = {
+        randomChar: (chars) => chars[Math.floor(Math.random() * chars.length)],
+        parseMessages: (raw) => {
+            if (!raw) return [];
+            try { return JSON.parse(raw); } catch { return raw.split("|"); }
+        },
+        parseBoolean: (val) => val === undefined ? undefined : val === "true" || val === ""
+    };
+
+    class HackerText {
+        constructor(options) {
+            this.settings = { ...DEFAULTS, ...options };
+            this.el = typeof this.settings.element === "string" ?
+                document.querySelector(this.settings.element) : this.settings.element;
+
+            if (!this.el) {
+                console.error("HackerText: element not found");
+                return;
+            }
+
+            const rawMessages = this.settings.messages || [];
+            this.messages = rawMessages.length > 0 ?
+                rawMessages : [this.el.textContent.trim() || "HACKING..."];
+
+            this.index = 0;
+            this.frameId = null;
+            this.timeoutId = null;
+            this.observer = null;
+            this.listeners = [];
+            this.isRunning = false;
+
+            this.initTrigger();
+        }
+
+        addEventListenerHelper(target, event, callback) {
+            target.addEventListener(event, callback);
+            this.listeners.push({ target, event, callback });
+        }
+
+        initTrigger() {
+            const trigger = this.settings.trigger;
+
+            if (trigger === "scroll" && "IntersectionObserver" in window) {
+                this.observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            this.start();
+                            this.observer.unobserve(this.el);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                this.observer.observe(this.el);
+            } else if (trigger === "click") {
+                this.el.style.cursor = "pointer";
+                this.addEventListenerHelper(this.el, "click", () => {
+                    if (!this.settings.interrupt && this.isRunning) return;
+                    this.index = 0;
+                    this.start();
+                });
+            } else if (trigger === "hover") {
+                this.el.style.cursor = "pointer";
+
+                if (this.el.textContent.trim() === "" && this.messages.length > 0) {
+                    this.el.textContent = this.messages[0];
+                }
+
+                this.addEventListenerHelper(this.el, "mouseenter", () => {
+                    if (!this.settings.interrupt && this.isRunning) return;
+                    this.index = 0;
+                    this.start();
+                });
+            } else if (trigger === "load") {
+                this.start();
+            }
+        }
+
+        scrambleReveal(targetText) {
+            this.isRunning = true;
+            const targetLength = targetText.length;
+            const charStates = Array.from({ length: targetLength }, () => ({
+                count: -Math.floor(Math.random() * 4)
+            }));
+
+            const tick = () => {
+                let complete = true;
+                let output = "";
+
+                for (let i = 0; i < targetLength; i++) {
+                    const state = charStates[i];
+
+                    if (state.count < 0) {
+                        output += this.settings.liveChars ? utils.randomChar(this.settings.chars) : " ";
+                        state.count++;
+                        complete = false;
+                    } else if (state.count >= this.settings.scrambleCount) {
+                        output += targetText[i];
+                    } else {
+                        output += utils.randomChar(this.settings.chars);
+                        state.count++;
+                        complete = false;
+                    }
+                }
+
+                this.el.textContent = output;
+
+                if (!complete) {
+                    this.timeoutId = setTimeout(() => {
+                        this.frameId = requestAnimationFrame(tick);
+                    }, this.settings.speed);
+                } else {
+                    this.handlePhaseEnd(targetText);
+                }
+            };
+
+            this.frameId = requestAnimationFrame(tick);
+        }
+
+        handlePhaseEnd(completedText) {
+            if (typeof this.settings.onMessage === "function") {
+                this.settings.onMessage(completedText, this.index);
+            }
+
+            const isLastMessage = this.index === this.messages.length - 1;
+
+            if (!isLastMessage || this.settings.loop || !this.settings.keepAfterFinish) {
+                this.timeoutId = setTimeout(() => this.delete(), this.settings.delay);
+            } else {
+                this.isRunning = false;
+                if (typeof this.settings.onComplete === "function") {
+                    this.settings.onComplete();
+                }
+            }
+        }
+
+        delete() {
+            this.isRunning = true;
+            const tick = () => {
+                const text = this.el.textContent;
+                if (text.length > 0) {
+                    this.el.textContent = text.slice(0, -1);
+                    this.timeoutId = setTimeout(() => {
+                        this.frameId = requestAnimationFrame(tick);
+                    }, this.settings.deleteSpeed);
+                } else {
+                    this.index++;
+                    if (this.index >= this.messages.length) {
+                        if (this.settings.loop) {
+                            this.index = 0;
+                        } else {
+                            this.isRunning = false;
+                            if (typeof this.settings.onComplete === "function") {
+                                this.settings.onComplete();
+                            }
+                            return;
+                        }
+                    }
+                    this.timeoutId = setTimeout(() => this.start(), 200);
+                }
+            };
+            this.frameId = requestAnimationFrame(tick);
+        }
+
+        start() {
+            if (!this.settings.interrupt && this.isRunning && arguments.callee.caller !== this.scrambleReveal) {
+            }
+            this.cancelTimers();
+            if (this.messages.length > 0) {
+                this.scrambleReveal(this.messages[this.index]);
+            }
+        }
+
+        cancelTimers() {
+            if (this.frameId) cancelAnimationFrame(this.frameId);
+            if (this.timeoutId) clearTimeout(this.timeoutId);
+        }
+
+        destroy() {
+            this.cancelTimers();
+            this.isRunning = false;
+            if (this.observer) this.observer.disconnect();
+
+            this.listeners.forEach(({ target, event, callback }) => {
+                target.removeEventListener(event, callback);
+            });
+            this.listeners = [];
+        }
+    }
+
+    window.HackerText = {
+        init: (options) => new HackerText(options)
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("[data-hacker]").forEach(el => {
+            const options = {
+                element: el,
+                messages: utils.parseMessages(el.dataset.messages),
+                speed: el.dataset.speed ? Number(el.dataset.speed) : undefined,
+                deleteSpeed: el.dataset.deleteSpeed ? Number(el.dataset.deleteSpeed) : undefined,
+                delay: el.dataset.delay ? Number(el.dataset.delay) : undefined,
+                chars: el.dataset.chars,
+                trigger: el.dataset.trigger,
+                loop: utils.parseBoolean(el.dataset.loop),
+                liveChars: utils.parseBoolean(el.dataset.liveChars),
+                keepAfterFinish: utils.parseBoolean(el.dataset.keepAfterFinish),
+                interrupt: utils.parseBoolean(el.dataset.interrupt)
+            };
+
+            Object.keys(options).forEach(key => options[key] === undefined && delete options[key]);
+            new HackerText(options);
+        });
+    });
+})();
